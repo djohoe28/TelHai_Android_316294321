@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "583504165731",
+    "project_id": "telhai-android-316294321",
+    "storage_bucket": "telhai-android-316294321.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:583504165731:android:fd8a8ab3ddbc9ad9c97156",
+        "android_client_info": {
+          "package_name": "com.telhai.android_316294321"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqrIYA4yrvjo-EVk3bdF07dSQ36mj9YpE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
