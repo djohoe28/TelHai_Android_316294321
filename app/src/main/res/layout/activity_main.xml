@@ -27,7 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.462" />
+        app:layout_constraintVertical_bias="0.85" />
 
     <com.telhai.android_316294321.SoundControlView
         android:layout_width="409dp"
@@ -35,6 +35,9 @@
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:soundIcon="@string/fire_name"
+        app:soundName="@string/fire_name"
+        app:soundPath="@string/fire_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

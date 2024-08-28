@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Android_316294321</string>
-    <string name="mute_on">Mute</string>
-    <string name="mute_off">Unmute</string>
+    <string name="mute_off">Mute</string>
+    <string name="mute_on">Unmute</string>
     <string name="mute_text">Toggle Mute</string>
     <string name="fire_name">Fire</string>
     <string name="water_name">Water</string>

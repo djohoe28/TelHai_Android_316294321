@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="SoundControlView">
-        <attr name="sound_name" format="string" />
-        <attr name="sound_path" format="string" />
-        <attr name="sound_icon" format="string" />
+        <attr name="soundName" format="string" />
+        <attr name="soundPath" format="string" />
+        <attr name="soundIcon" format="string" />
     </declare-styleable>
 </resources>
