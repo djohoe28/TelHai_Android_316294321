@@ -7,4 +7,5 @@
     <string name="water_name">Water</string>
     <string name="air_name">Air</string>
     <string name="earth_name">Earth</string>
+    <string name="import_text">Import</string>
 </resources>
