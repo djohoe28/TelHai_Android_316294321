@@ -2,7 +2,9 @@
 <resources>
     <declare-styleable name="SoundControlView">
         <attr name="soundName" format="string" />
-        <attr name="soundPath" format="string" />
-        <attr name="soundIcon" format="string" />
+        <attr name="soundIcon" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="SystemSoundControlView">
+        <attr name="soundPath" format="reference" />
     </declare-styleable>
 </resources>

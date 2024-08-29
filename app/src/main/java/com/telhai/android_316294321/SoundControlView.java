@@ -13,56 +13,79 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
-public class SoundControlView extends CardView {
+public abstract class SoundControlView extends CardView {
 
     //#region Properties
     private static final String TAG = "SoundControlView";
-    private final ImageButton imageButtonMute;
+
+    // Views
+    private final TextView textName;
+    private final ImageButton imageButtonMute; // TODO: Duplicate speakable text present
     private final SeekBar seekVolume;
     private MediaPlayer mediaPlayer;
     // Attributes
     private String soundName;
-    private String soundPath;
-    private String soundIcon;
+    private int soundIcon;
     // State
-    private int volume = 50;
+    /**
+     * Volume from 0 to 100. Clamped by SeekBar.
+     */
+    private int volume = 0;
+    /**
+     * Whether the sound is currently "muted" (paused).
+     */
     private boolean isMuted = false;
     //#endregion
 
-    public SoundControlView(@NonNull Context context, AttributeSet attrs) {
-        super(context, attrs);
-        // Initialize layout
+
+    public SoundControlView(@NonNull Context context, String _soundName, int _soundIcon) {
+        super(context);
+        // Layout
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.sound_control, this, true);
-        // Initialize attributes
-        try (TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
-                R.styleable.SoundControlView, 0, 0)) {
-            soundName = a.getString(R.styleable.SoundControlView_soundName);
-            soundIcon = a.getString(R.styleable.SoundControlView_soundIcon);
-            soundPath = a.getString(R.styleable.SoundControlView_soundPath);
-            // TODO: Create with soundPath - maybe split built-in (resourceId) and custom (path) ?
-            mediaPlayer = MediaPlayer.create(context, R.raw.fire_pixabay_fireplace_6160);
-            mediaPlayer.setLooping(true);
-            mediaPlayer.setVolume(volume / 100.0f, volume / 100.0f);
-            mediaPlayer.start();
+        inflater.inflate(getLayout(), this, true);
+        // Views
+        textName = findViewById(R.id.textName);
+        imageButtonMute = findViewById(R.id.imageButtonMute);
+        seekVolume = findViewById(R.id.seekVolume);
+        initialize();
+        // Apply attributes (parameters)
+        setSoundIcon(_soundIcon);
+        setSoundName(_soundName);
+        Log.d(TAG, String.format("ParamConstructor(name=%s icon=%s)", _soundName, _soundIcon));
+    }
+
+    public SoundControlView(@NonNull Context context, AttributeSet attrs) {
+        super(context, attrs);
+        // Layout
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(getLayout(), this, true);
+        // Views
+        textName = findViewById(R.id.textName);
+        imageButtonMute = findViewById(R.id.imageButtonMute);
+        seekVolume = findViewById(R.id.seekVolume);
+        initialize();
+        // Apply attributes (AttributeSet)
+        try (TypedArray a = context.obtainStyledAttributes(attrs,
+                R.styleable.SoundControlView)) {
+            setSoundIcon(a.getResourceId(R.styleable.SoundControlView_soundIcon, 0));
+            setSoundName(a.getString(R.styleable.SoundControlView_soundName));
+            Log.d(TAG, String.format("SUCCESS AttrConstructor(name=%s icon=%s)", soundName, soundIcon));
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage() != null ? ex.getMessage() : "attrs Exception");
         } // TODO: finally { a.recycle(); }
-        Log.d(TAG, String.format("Constructor(name=%s, path=%s, icon=%s)",
-                soundName, soundPath, soundIcon));
-        //#region Initialize views
-        // Name TextView
-        TextView textName = findViewById(R.id.textName);
-        textName.setText(soundName);
-        // Mute ImageButton
-        imageButtonMute = findViewById(R.id.imageButtonMute);
+        Log.d(TAG, String.format("END AttrConstructor(name=%s icon=%s)", soundName, soundIcon));
+    }
+
+    private void initialize() {
+
+        // View - Mute ImageButton
         imageButtonMute.setOnClickListener(view -> {
             Log.d(TAG, String.format("toggleMute.onCheckedChanged(%s, %s)", soundName, isMuted));
             setIsMuted(!isMuted);
         });
-        // Volume SeekBar
-        seekVolume = findViewById(R.id.seekVolume);
+        // View - Volume SeekBar
         seekVolume.setProgress(volume); // NOTE: Doing this before adding listener prevents call.
         seekVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -84,12 +107,50 @@ public class SoundControlView extends CardView {
         });
     }
 
+    //#region Getters
+
+    /**
+     * Returns the intended Layout Resource ID.
+     * Note: used in case I'd like to make different layouts for different subclasses.
+     *
+     * @return The intended Layout Resource ID.
+     */
+    public abstract int getLayout();
     //#endregion
+
     //#region Setters
+    public void setSoundIcon(int value) {
+        soundIcon = value;
+        textName.setCompoundDrawablesWithIntrinsicBounds(soundIcon, 0, 0, 0);
+        invalidate();
+        requestLayout();
+    }
+
+    public void setSoundName(String value) {
+        soundName = value;
+        textName.setText(soundName);
+        invalidate();
+        requestLayout();
+    }
+
+    public void setMediaPlayer(MediaPlayer value) {
+        mediaPlayer = value;
+        if (mediaPlayer != null) initializeMediaPlayer();
+    }
+
+    public void initializeMediaPlayer() {
+        mediaPlayer.setLooping(true);
+        mediaPlayer.setVolume(volume / 100.0f, volume / 100.0f);
+        mediaPlayer.start();
+    }
+
     public void setVolume(int value) {
         volume = value;
         seekVolume.setProgress(volume);
-        mediaPlayer.setVolume(volume / 100.0f, volume / 100.0f);
+        invalidate();
+        requestLayout();
+        if (mediaPlayer != null)
+            mediaPlayer.setVolume(volume / 100.0f, volume / 100.0f);
     }
 
     public void setIsMuted(boolean value) {
@@ -100,7 +161,8 @@ public class SoundControlView extends CardView {
         // NOTE: This is technically not muting but pausing; However, I think it's cute.
         if (isMuted) mediaPlayer.pause();
         else mediaPlayer.start();
-
+        invalidate();
+        requestLayout();
     }
     //#endregion
 }

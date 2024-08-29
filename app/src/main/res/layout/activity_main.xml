@@ -18,6 +18,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.172" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabImport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="28dp"
+        android:clickable="true"
+        android:contentDescription="@string/import_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/baseline_upload_file_24" />
+
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
@@ -29,15 +41,105 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.85" />
 
-    <com.telhai.android_316294321.SoundControlView
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
+    <ScrollView
+        android:id="@+id/scrollViewSounds"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:soundIcon="@string/fire_name"
-        app:soundName="@string/fire_name"
-        app:soundPath="@string/fire_name" />
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+
+        <LinearLayout
+            android:id="@+id/linearLayoutSounds"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.telhai.android_316294321.SystemSoundControlView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:soundIcon="@drawable/baseline_water_drop_24"
+                app:soundName="@string/water_name"
+                app:soundPath="@raw/water_pixabay_the_sound_of_a_stream_a_spring_stream_the_sound_of_water_109237" />
+
+            <com.telhai.android_316294321.SystemSoundControlView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:soundIcon="@drawable/baseline_directions_walk_24"
+                app:soundName="@string/earth_name"
+                app:soundPath="@raw/earth_pixabay_walking_soundscape_200112" />
+
+            <com.telhai.android_316294321.SystemSoundControlView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:soundIcon="@drawable/baseline_local_fire_department_24"
+                app:soundName="@string/fire_name"
+                app:soundPath="@raw/fire_pixabay_fireplace_6160" />
+
+            <com.telhai.android_316294321.SystemSoundControlView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:soundIcon="@drawable/baseline_wind_power_24"
+                app:soundName="@string/air_name"
+                app:soundPath="@raw/air_pixabay_wind_blowing_sfx_12809" />
+
+            <com.telhai.android_316294321.SystemSoundControlView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:soundIcon="@drawable/baseline_water_drop_24"
+                app:soundName="@string/water_name"
+                app:soundPath="@raw/water_pixabay_the_sound_of_a_stream_a_spring_stream_the_sound_of_water_109237" />
+
+            <com.telhai.android_316294321.SystemSoundControlView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:soundIcon="@drawable/baseline_directions_walk_24"
+                app:soundName="@string/earth_name"
+                app:soundPath="@raw/earth_pixabay_walking_soundscape_200112" />
+
+            <com.telhai.android_316294321.SystemSoundControlView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:soundIcon="@drawable/baseline_local_fire_department_24"
+                app:soundName="@string/fire_name"
+                app:soundPath="@raw/fire_pixabay_fireplace_6160" />
+
+            <com.telhai.android_316294321.SystemSoundControlView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:soundIcon="@drawable/baseline_wind_power_24"
+                app:soundName="@string/air_name"
+                app:soundPath="@raw/air_pixabay_wind_blowing_sfx_12809" />
+
+            <com.telhai.android_316294321.SystemSoundControlView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:soundIcon="@drawable/baseline_water_drop_24"
+                app:soundName="@string/water_name"
+                app:soundPath="@raw/water_pixabay_the_sound_of_a_stream_a_spring_stream_the_sound_of_water_109237" />
+
+            <com.telhai.android_316294321.SystemSoundControlView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:soundIcon="@drawable/baseline_directions_walk_24"
+                app:soundName="@string/earth_name"
+                app:soundPath="@raw/earth_pixabay_walking_soundscape_200112" />
+
+            <com.telhai.android_316294321.SystemSoundControlView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:soundIcon="@drawable/baseline_local_fire_department_24"
+                app:soundName="@string/fire_name"
+                app:soundPath="@raw/fire_pixabay_fireplace_6160" />
+
+            <com.telhai.android_316294321.SystemSoundControlView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:soundIcon="@drawable/baseline_wind_power_24"
+                app:soundName="@string/air_name"
+                app:soundPath="@raw/air_pixabay_wind_blowing_sfx_12809" />
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
