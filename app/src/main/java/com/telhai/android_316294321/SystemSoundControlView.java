@@ -11,11 +11,6 @@ import androidx.annotation.NonNull;
 public class SystemSoundControlView extends SoundControlView {
     private static final String TAG = "SystemSoundControlView";
 
-//    public SystemSoundControlView(@NonNull Context context, String _soundName, int _soundIcon) {
-//        super(context, _soundName, _soundIcon);
-//        Log.w(TAG, String.format("ParamConstructor(name=%s icon=%s)", _soundName, _soundIcon));
-//    }
-
     public SystemSoundControlView(@NonNull Context context, AttributeSet attrs) {
         super(context, attrs);
         try (TypedArray a = context.obtainStyledAttributes(attrs,
