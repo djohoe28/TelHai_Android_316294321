@@ -78,11 +78,13 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.READ_MEDIA_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                 // Permission not granted; Request permission.
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    // Tiramisu or newer (Android 33+)
                     ActivityCompat.requestPermissions(
                             MainActivity.this,
                             new String[]{Manifest.permission.READ_MEDIA_AUDIO},
                             REQUEST_CODE_PERMISSION);
                 } else {
+                    // Older than Tiramisu (Android 32-)
                     ActivityCompat.requestPermissions(
                             MainActivity.this,
                             new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
