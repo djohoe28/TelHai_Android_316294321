@@ -14,12 +14,12 @@ public class StorageSoundControlView extends SoundControlView {
     public StorageSoundControlView(@NonNull Context context, String _soundName, int _soundIcon, Uri _soundPath) {
         super(context, _soundName, _soundIcon);
         setSoundPath(context, _soundPath);
-        Log.w(TAG, String.format("ParamConstructor(name=%s icon=%s path=%s)", _soundName, _soundIcon, _soundPath));
+        Log.i(TAG, String.format("ParamConstructor(name=%s icon=%s path=%s)", _soundName, _soundIcon, _soundPath));
     }
 
     public StorageSoundControlView(@NonNull Context context, AttributeSet attrs) {
         super(context, attrs);
-        Log.w(TAG, "Constructor()");
+        Log.i(TAG, "AttrConstructor()");
     }
 
     @Override

@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityResultLauncher<String> mGetContent = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
                 uri -> {
-                    Log.d(TAG, String.format("onActivityResult(%s)", uri));
+                    Log.i(TAG, String.format("onActivityResult(%s)", uri));
                     if (uri != null) {
                         // Extract filename from URI
                         String segment = uri.getLastPathSegment() == null ? uri.toString() : uri.getLastPathSegment();
@@ -119,13 +119,13 @@ public class MainActivity extends AppCompatActivity {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 String value = dataSnapshot.getValue(String.class);
-                Log.d(TAG, "Value is: " + value);
+                Log.i(TAG, "Value is: " + value);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
+                Log.e(TAG, "Failed to read value.", error.toException());
             }
         });
     }

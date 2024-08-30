@@ -52,7 +52,7 @@ public abstract class SoundControlView extends CardView {
         // Apply attributes (parameters)
         setSoundIcon(_soundIcon);
         setSoundName(_soundName);
-        Log.d(TAG, String.format("ParamConstructor(name=%s icon=%s)", _soundName, _soundIcon));
+        Log.i(TAG, String.format("ParamConstructor(name=%s icon=%s)", _soundName, _soundIcon));
     }
 
     public SoundControlView(@NonNull Context context, AttributeSet attrs) {
@@ -71,18 +71,18 @@ public abstract class SoundControlView extends CardView {
                 R.styleable.SoundControlView)) {
             setSoundIcon(a.getResourceId(R.styleable.SoundControlView_soundIcon, 0));
             setSoundName(a.getString(R.styleable.SoundControlView_soundName));
-            Log.d(TAG, String.format("SUCCESS AttrConstructor(name=%s icon=%s)", soundName, soundIcon));
+            Log.v(TAG, "Attributes read successfully.");
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage() != null ? ex.getMessage() : "attrs Exception");
         } // TODO: finally { a.recycle(); }
-        Log.d(TAG, String.format("END AttrConstructor(name=%s icon=%s)", soundName, soundIcon));
+        Log.i(TAG, String.format("AttrConstructor(name=%s icon=%s)", soundName, soundIcon));
     }
 
     private void initialize() {
 
         // View - Mute ImageButton
         imageButtonMute.setOnClickListener(view -> {
-            Log.d(TAG, String.format("toggleMute.onCheckedChanged(%s, %s)", soundName, isMuted));
+            Log.i(TAG, String.format("toggleMute.onCheckedChanged(%s, %s)", soundName, isMuted));
             setIsMuted(!isMuted);
         });
         // View - Volume SeekBar
@@ -90,19 +90,19 @@ public abstract class SoundControlView extends CardView {
         seekVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                Log.d(TAG, String.format("seekVolume.onProgressChanged(%s, %d, %s)",
+                Log.i(TAG, String.format("seekVolume.onProgressChanged(%s, %d, %s)",
                         soundName, progress, fromUser));
                 if (fromUser) setVolume(progress);
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                Log.d(TAG, String.format("seekVolume.onStartTrackingTouch(%s)", soundName));
+                Log.v(TAG, String.format("seekVolume.onStartTrackingTouch(%s)", soundName));
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Log.d(TAG, String.format("seekVolume.onStopTrackingTouch(%s)", soundName));
+                Log.v(TAG, String.format("seekVolume.onStopTrackingTouch(%s)", soundName));
             }
         });
     }

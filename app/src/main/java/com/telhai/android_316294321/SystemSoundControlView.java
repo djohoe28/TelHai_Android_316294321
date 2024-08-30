@@ -16,7 +16,8 @@ public class SystemSoundControlView extends SoundControlView {
         try (TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.SystemSoundControlView)) {
             int resId = a.getResourceId(R.styleable.SystemSoundControlView_soundPath, 0);
-            Log.d(TAG, String.format("Constructor(path=%d)", resId));
+            Log.i(TAG, String.format("Constructor(path=%d)", resId));
+            // TODO: Move to separate Thread
             MediaPlayer player = MediaPlayer.create(context, resId);
             setMediaPlayer(player); // NOTE: runs initializeMediaPlayer();
         } catch (Exception ex) {
