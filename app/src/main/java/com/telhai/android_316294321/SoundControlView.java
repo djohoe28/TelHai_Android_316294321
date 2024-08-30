@@ -14,10 +14,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
+import java.util.Locale;
+
 import threading.MediaHandler;
 import threading.MediaThread;
 
-public abstract class SoundControlView extends CardView {
+public class SoundControlView extends CardView {
     //#region Properties
     // Static
     private static final String TAG = "SoundControlView";
@@ -28,9 +30,9 @@ public abstract class SoundControlView extends CardView {
     private MediaThread thread;
 
     // Views
-    private final TextView textName;
-    private final ImageButton imageButtonMute; // TODO: Duplicate speakable text present
-    private final SeekBar seekVolume;
+    private TextView textName;
+    private ImageButton imageButtonMute; // TODO: Duplicate speakable text present
+    private SeekBar seekVolume;
 
     // Attributes
     /**
@@ -38,6 +40,7 @@ public abstract class SoundControlView extends CardView {
      */
     private String soundName;
     private int soundIcon;
+    private Uri soundPath;
     // State
     /**
      * Volume from 0 to 100. Clamped by SeekBar.
@@ -51,50 +54,43 @@ public abstract class SoundControlView extends CardView {
 
 
     //#region Constructors
-    public SoundControlView(@NonNull Context context, String _soundName, int _soundIcon) {
+    public SoundControlView(@NonNull Context context, Uri _soundPath, String _soundName, int _soundIcon) {
         super(context);
-        // Layout
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
-                Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(getLayout(), this, true);
-        // Views
-        textName = findViewById(R.id.textName);
-        imageButtonMute = findViewById(R.id.imageButtonMute);
-        seekVolume = findViewById(R.id.seekVolume);
         initialize();
         // Apply attributes (parameters)
+        setSoundPath(_soundPath);
         setSoundIcon(_soundIcon);
         setSoundName(_soundName);
-        Log.i(TAG, String.format("ParamConstructor(name=%s icon=%s)", _soundName, _soundIcon));
+        Log.i(TAG, String.format("ParamConstructor(path=%s, name=%s, icon=%s)", _soundPath, _soundName, _soundIcon));
     }
 
     public SoundControlView(@NonNull Context context, AttributeSet attrs) {
         super(context, attrs);
-        // Layout
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
-                Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(getLayout(), this, true);
-        // Views
-        textName = findViewById(R.id.textName);
-        imageButtonMute = findViewById(R.id.imageButtonMute);
-        seekVolume = findViewById(R.id.seekVolume);
         initialize();
         // Apply attributes (AttributeSet)
         try (TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.SoundControlView)) {
+            setSoundPath(a.getResourceId(R.styleable.SoundControlView_soundPath, 0));
             setSoundIcon(a.getResourceId(R.styleable.SoundControlView_soundIcon, 0));
             setSoundName(a.getString(R.styleable.SoundControlView_soundName));
             Log.v(TAG, "Attributes read successfully.");
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage() != null ? ex.getMessage() : "attrs Exception");
         } // TODO: finally { a.recycle(); }
-        Log.i(TAG, String.format("AttrConstructor(name=%s icon=%s)", soundName, soundIcon));
+        Log.i(TAG, String.format("AttrConstructor(name=%s icon=%s, path=%s)", soundName, soundIcon, soundPath));
     }
     //#endregion
 
     //#region Methods
     private void initialize() {
-
+        // Inflate layout
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.sound_control, this, true);
+        // Get views
+        textName = findViewById(R.id.textName);
+        imageButtonMute = findViewById(R.id.imageButtonMute);
+        seekVolume = findViewById(R.id.seekVolume);
         // View - Mute ImageButton
         imageButtonMute.setOnClickListener(view -> {
             Log.i(TAG, String.format("toggleMute.onCheckedChanged(%s, %s)", soundName, isMuted));
@@ -123,17 +119,6 @@ public abstract class SoundControlView extends CardView {
     }
     //#endregion
 
-    //#region Getters
-
-    /**
-     * Returns the intended Layout Resource ID.
-     * Note: used in case I'd like to make different layouts for different subclasses.
-     *
-     * @return The intended Layout Resource ID.
-     */
-    public abstract int getLayout();
-    //#endregion
-
     //#region Setters
     public void setSoundIcon(int value) {
         soundIcon = value;
@@ -149,12 +134,17 @@ public abstract class SoundControlView extends CardView {
         requestLayout();
     }
 
-    public void setMedia(int resId) {
+    public void setSoundPath(int resId) {
+        soundPath = Uri.parse(String.format(Locale.getDefault(),
+                "android.resource://%s/%d", MainActivity.PACKAGE_NAME, resId));
+        if (thread != null) thread.interrupt();
         thread = new MediaThread(getContext(), resId, volume, isMuted);
         thread.start();
     }
 
-    public void setMedia(Uri uri) {
+    public void setSoundPath(Uri uri) {
+        soundPath = uri;
+        if (thread != null) thread.interrupt();
         thread = new MediaThread(getContext(), uri, volume, isMuted);
         thread.start();
     }

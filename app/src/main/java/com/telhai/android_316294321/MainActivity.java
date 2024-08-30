@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String PACKAGE_NAME = "com.telhai.android_316294321";
     private static final String TAG = "MainActivity";
     private static final String FIREBASE_URL =
             "https://telhai-android-316294321-default-rtdb.europe-west1.firebasedatabase.app";
@@ -63,11 +64,11 @@ public class MainActivity extends AppCompatActivity {
                         Matcher matcher = FILENAME_PATTERN.matcher(segment);
                         String name = matcher.find() ? matcher.group("name") : segment;
                         // Create view
-                        StorageSoundControlView _view = new StorageSoundControlView(
+                        SoundControlView _view = new SoundControlView(
                                 MainActivity.this,
+                                uri,
                                 name,
-                                R.drawable.baseline_audio_file_24,
-                                uri);
+                                R.drawable.baseline_audio_file_24);
                         linearLayoutSounds.addView(_view);
                     }
                 });
