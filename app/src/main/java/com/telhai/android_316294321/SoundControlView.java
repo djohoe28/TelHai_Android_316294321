@@ -31,7 +31,9 @@ public class SoundControlView extends CardView {
 
     // Views
     private TextView textName;
-    private ImageButton imageButtonMute; // TODO: Duplicate speakable text present
+    // TODO: Duplicate speakable text present
+    // TODO: Refactor "mute" to "pause"
+    private ImageButton imageButtonMute;
     private SeekBar seekVolume;
 
     // Attributes
@@ -89,7 +91,7 @@ public class SoundControlView extends CardView {
         inflater.inflate(R.layout.sound_control, this, true);
         // Get views
         textName = findViewById(R.id.textName);
-        imageButtonMute = findViewById(R.id.imageButtonMute);
+        imageButtonMute = findViewById(R.id.imageButtonPause);
         seekVolume = findViewById(R.id.seekVolume);
         // View - Mute ImageButton
         imageButtonMute.setOnClickListener(view -> {
@@ -179,8 +181,8 @@ public class SoundControlView extends CardView {
             handler.sendMessage(message);
         }
         imageButtonMute.setImageResource(isMuted
-                ? R.drawable.baseline_volume_off_24
-                : R.drawable.baseline_volume_up_24);
+                ? R.drawable.baseline_play_circle_filled_24
+                : R.drawable.baseline_pause_circle_filled_24);
         invalidate();
         requestLayout();
     }
