@@ -16,8 +16,8 @@ import androidx.cardview.widget.CardView;
 
 import java.util.Locale;
 
-import threading.MediaHandler;
-import threading.MediaRunnable;
+import com.telhai.android_316294321.threads.MediaHandler;
+import com.telhai.android_316294321.threads.MediaRunnable;
 
 public class SoundControlView extends CardView {
     //#region Properties
