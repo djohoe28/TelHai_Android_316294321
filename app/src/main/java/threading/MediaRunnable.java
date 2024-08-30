@@ -50,7 +50,14 @@ public class MediaRunnable implements Runnable {
     //#endregion
 
     //#region Methods
-    private void initializePlayer() {
+    public void quit() {
+        Objects.requireNonNull(Looper.myLooper()).quit();
+    }
+    //#endregion
+
+    //#region Overrides
+    @Override
+    public void run() {
         if (uri != null)
             player = MediaPlayer.create(context, uri);
         else
@@ -58,13 +65,8 @@ public class MediaRunnable implements Runnable {
         player.setLooping(true);
         setVolume(volume);
         setIsMuted(isMuted);
-    }
-    //#endregion
-
-    //#region Overrides
-    @Override
-    public void run() {
-        initializePlayer();
+        // TODO: Add CountDownLatch for synchronization.
+        // TODO: Release `MediaPlayer` resources in `finally` block
         Looper.prepare();
         handler = new MediaHandler(Objects.requireNonNull(Looper.myLooper()), this);
         Looper.loop();

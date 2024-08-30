@@ -17,7 +17,7 @@ import androidx.cardview.widget.CardView;
 import java.util.Locale;
 
 import threading.MediaHandler;
-import threading.MediaThread;
+import threading.MediaRunnable;
 
 public class SoundControlView extends CardView {
     //#region Properties
@@ -27,7 +27,7 @@ public class SoundControlView extends CardView {
     /**
      * The thread in charge of the sound.
      */
-    private MediaThread thread;
+    private MediaRunnable runnable;
 
     // Views
     private TextView textName;
@@ -137,22 +137,32 @@ public class SoundControlView extends CardView {
     public void setSoundPath(int resId) {
         soundPath = Uri.parse(String.format(Locale.getDefault(),
                 "android.resource://%s/%d", MainActivity.PACKAGE_NAME, resId));
-        if (thread != null) thread.interrupt();
-        thread = new MediaThread(getContext(), resId, volume, isMuted);
-        thread.start();
+        // TODO: Merge with URI?
+        if (runnable != null && runnable.getHandler() != null) {
+            runnable.getHandler().sendEmptyMessage(MediaHandler.TERMINATE_MESSAGE);
+        }
+        runnable = new MediaRunnable(getContext(), resId, volume, isMuted);
+        new Thread(runnable).start();
     }
 
     public void setSoundPath(Uri uri) {
         soundPath = uri;
-        if (thread != null) thread.interrupt();
-        thread = new MediaThread(getContext(), uri, volume, isMuted);
-        thread.start();
+        // TODO: Streamline with CountDownLatch?
+        // TODO: How to remove sound? With `onDestroy()`? With `Thread.interrupt()`? In `MainActivity`?
+        // TODO:
+        //  FORTIFY: pthread_mutex_lock called on a destroyed mutex (0x7b9a09802ab8)
+        //  Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 9707 (hwuiTask0), pid 9622 (droid_316294321)
+        if (runnable != null && runnable.getHandler() != null) {
+            runnable.getHandler().sendEmptyMessage(MediaHandler.TERMINATE_MESSAGE);
+        }
+        runnable = new MediaRunnable(getContext(), uri, volume, isMuted);
+        new Thread(runnable).start();
     }
 
     public void setVolume(int value) {
         volume = value;
-        if (thread.getHandler() != null) {
-            MediaHandler handler = thread.getHandler();
+        if (runnable.getHandler() != null) {
+            MediaHandler handler = runnable.getHandler();
             Message message = handler.obtainMessage(MediaHandler.VOLUME_CHANGE_MESSAGE, value);
             handler.sendMessage(message);
         }
@@ -163,8 +173,8 @@ public class SoundControlView extends CardView {
 
     public void setIsMuted(boolean value) {
         isMuted = value;
-        if (thread.getHandler() != null) {
-            MediaHandler handler = thread.getHandler();
+        if (runnable.getHandler() != null) {
+            MediaHandler handler = runnable.getHandler();
             Message message = handler.obtainMessage(MediaHandler.MUTED_CHANGE_MESSAGE, value);
             handler.sendMessage(message);
         }
