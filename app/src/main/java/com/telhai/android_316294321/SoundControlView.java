@@ -2,7 +2,8 @@ package com.telhai.android_316294321;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,16 +15,24 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
 public abstract class SoundControlView extends CardView {
-
     //#region Properties
+    // Static
     private static final String TAG = "SoundControlView";
+    // Instance
+    /**
+     * The thread in charge of the sound.
+     */
+    private MediaThread thread;
 
     // Views
     private final TextView textName;
     private final ImageButton imageButtonMute; // TODO: Duplicate speakable text present
     private final SeekBar seekVolume;
-    private MediaPlayer mediaPlayer;
+
     // Attributes
+    /**
+     * The display name of the sound.
+     */
     private String soundName;
     private int soundIcon;
     // State
@@ -38,6 +47,7 @@ public abstract class SoundControlView extends CardView {
     //#endregion
 
 
+    //#region Constructors
     public SoundControlView(@NonNull Context context, String _soundName, int _soundIcon) {
         super(context);
         // Layout
@@ -77,7 +87,9 @@ public abstract class SoundControlView extends CardView {
         } // TODO: finally { a.recycle(); }
         Log.i(TAG, String.format("AttrConstructor(name=%s icon=%s)", soundName, soundIcon));
     }
+    //#endregion
 
+    //#region Methods
     private void initialize() {
 
         // View - Mute ImageButton
@@ -106,6 +118,7 @@ public abstract class SoundControlView extends CardView {
             }
         });
     }
+    //#endregion
 
     //#region Getters
 
@@ -133,34 +146,38 @@ public abstract class SoundControlView extends CardView {
         requestLayout();
     }
 
-    public void setMediaPlayer(MediaPlayer value) {
-        mediaPlayer = value;
-        if (mediaPlayer != null) initializeMediaPlayer();
+    public void setMedia(int resId) {
+        thread = new MediaThread(getContext(), resId, volume, isMuted);
+        thread.start();
     }
 
-    public void initializeMediaPlayer() {
-        mediaPlayer.setLooping(true);
-        mediaPlayer.setVolume(volume / 100.0f, volume / 100.0f);
-        mediaPlayer.start();
+    public void setMedia(Uri uri) {
+        thread = new MediaThread(getContext(), uri, volume, isMuted);
+        thread.start();
     }
 
     public void setVolume(int value) {
         volume = value;
+        if (thread.getHandler() != null) {
+            MediaHandler handler = thread.getHandler();
+            Message message = handler.obtainMessage(MediaHandler.VOLUME_CHANGE_MESSAGE, value);
+            handler.sendMessage(message);
+        }
         seekVolume.setProgress(volume);
         invalidate();
         requestLayout();
-        if (mediaPlayer != null)
-            mediaPlayer.setVolume(volume / 100.0f, volume / 100.0f);
     }
 
     public void setIsMuted(boolean value) {
         isMuted = value;
+        if (thread.getHandler() != null) {
+            MediaHandler handler = thread.getHandler();
+            Message message = handler.obtainMessage(MediaHandler.MUTED_CHANGE_MESSAGE, value);
+            handler.sendMessage(message);
+        }
         imageButtonMute.setImageResource(isMuted
                 ? R.drawable.baseline_volume_off_24
                 : R.drawable.baseline_volume_up_24);
-        // NOTE: This is technically not muting but pausing; However, I think it's cute.
-        if (isMuted) mediaPlayer.pause();
-        else mediaPlayer.start();
         invalidate();
         requestLayout();
     }

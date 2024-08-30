@@ -2,7 +2,6 @@ package com.telhai.android_316294321;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.util.Log;
 
@@ -16,10 +15,8 @@ public class SystemSoundControlView extends SoundControlView {
         try (TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.SystemSoundControlView)) {
             int resId = a.getResourceId(R.styleable.SystemSoundControlView_soundPath, 0);
-            Log.i(TAG, String.format("Constructor(path=%d)", resId));
-            // TODO: Move to separate Thread
-            MediaPlayer player = MediaPlayer.create(context, resId);
-            setMediaPlayer(player); // NOTE: runs initializeMediaPlayer();
+            setMedia(resId);
+            Log.i(TAG, String.format("AttrConstructor(resId=%d)", resId));
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage() != null ? ex.getMessage() : "attrs Exception");
         } // TODO: finally { a.recycle(); }
