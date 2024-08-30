@@ -1,4 +1,4 @@
-package MediaThreading;
+package threading;
 
 import android.content.Context;
 import android.net.Uri;

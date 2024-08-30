@@ -14,8 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
-import MediaThreading.MediaHandler;
-import MediaThreading.MediaThread;
+import threading.MediaHandler;
+import threading.MediaThread;
 
 public abstract class SoundControlView extends CardView {
     //#region Properties

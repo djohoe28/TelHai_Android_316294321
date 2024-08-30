@@ -1,4 +1,4 @@
-package MediaThreading;
+package threading;
 
 import android.os.Handler;
 import android.os.Looper;
