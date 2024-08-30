@@ -6,10 +6,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -29,13 +28,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private static final String FIREBASE_URL =
             "https://telhai-android-316294321-default-rtdb.europe-west1.firebasedatabase.app";
+    private static final Pattern FILENAME_PATTERN = Pattern.compile(".*/(?<name>.*)");
     private static final int REQUEST_CODE_PERMISSION = 1;
     private FirebaseAuth mAuth;
+    private LinearLayout linearLayoutSounds;
 
 
     @Override
@@ -48,45 +52,45 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        linearLayoutSounds = findViewById(R.id.linearLayoutSounds);
         ActivityResultLauncher<String> mGetContent = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
-                new ActivityResultCallback<Uri>() {
-                    @Override
-                    public void onActivityResult(Uri uri) {
-                        Log.d(TAG, String.format("onActivityResult(%s)", uri));
-                        if (uri != null) {
-                            StorageSoundControlView _view = new StorageSoundControlView(
-                                    MainActivity.this,
-                                    uri.toString(), // TODO: Extract file name from URI
-                                    R.drawable.baseline_audio_file_24,
-                                    uri);
-                            // TODO: Add _view to LinearLayout
-                        }
+                uri -> {
+                    Log.d(TAG, String.format("onActivityResult(%s)", uri));
+                    if (uri != null) {
+                        // Extract filename from URI
+                        String segment = uri.getLastPathSegment() == null ? uri.toString() : uri.getLastPathSegment();
+                        Matcher matcher = FILENAME_PATTERN.matcher(segment);
+                        String name = matcher.find() ? matcher.group("name") : segment;
+                        // Create view
+                        StorageSoundControlView _view = new StorageSoundControlView(
+                                MainActivity.this,
+                                name,
+                                R.drawable.baseline_audio_file_24,
+                                uri);
+                        linearLayoutSounds.addView(_view);
                     }
                 });
         FloatingActionButton fabImport = findViewById(R.id.fabImport);
-        fabImport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Check Permission
-                if (ContextCompat.checkSelfPermission(view.getContext(),
-                        Manifest.permission.READ_MEDIA_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                    // Permission not granted; Request permission.
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        ActivityCompat.requestPermissions(
-                                MainActivity.this,
-                                new String[]{Manifest.permission.READ_MEDIA_AUDIO},
-                                REQUEST_CODE_PERMISSION);
-                    } else {
-                        ActivityCompat.requestPermissions(
-                                MainActivity.this,
-                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                REQUEST_CODE_PERMISSION);
-                    }
+        fabImport.setOnClickListener(view -> {
+            // Check Permission
+            if (ContextCompat.checkSelfPermission(view.getContext(),
+                    Manifest.permission.READ_MEDIA_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                // Permission not granted; Request permission.
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    ActivityCompat.requestPermissions(
+                            MainActivity.this,
+                            new String[]{Manifest.permission.READ_MEDIA_AUDIO},
+                            REQUEST_CODE_PERMISSION);
                 } else {
-                    // Permission granted; Request audio file.
-                    mGetContent.launch("audio/*");
+                    ActivityCompat.requestPermissions(
+                            MainActivity.this,
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                            REQUEST_CODE_PERMISSION);
                 }
+            } else {
+                // Permission granted; Request audio file.
+                mGetContent.launch("audio/*");
             }
         });
         // Firebase
