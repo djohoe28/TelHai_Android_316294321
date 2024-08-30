@@ -1,4 +1,4 @@
-package com.telhai.android_316294321;
+package MediaThreading;
 
 import android.content.Context;
 import android.media.MediaPlayer;
