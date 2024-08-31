@@ -25,7 +25,7 @@ import com.telhai.android_316294321.handlers.UriActivityResultCallback;
 public class MainActivity extends AppCompatActivity {
 
     public static final String PACKAGE_NAME = "com.telhai.android_316294321";
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "MainActivity"; // TODO: Reference this.
     private static final String FIREBASE_URL =
             "https://telhai-android-316294321-default-rtdb.europe-west1.firebasedatabase.app";
     private FirebaseAuth mAuth;
@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         linearLayoutSounds = findViewById(R.id.linearLayoutSounds);
+        // TODO: `mGetContent` can't be called from `FabOnClickListener`...
         ActivityResultLauncher<String> mGetContent = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
                 new UriActivityResultCallback(this));
