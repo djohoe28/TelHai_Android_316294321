@@ -7,6 +7,7 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -16,6 +17,8 @@ import androidx.cardview.widget.CardView;
 
 import java.util.Locale;
 
+import com.telhai.android_316294321.handlers.PauseOnClickListener;
+import com.telhai.android_316294321.handlers.VolumeChangeListener;
 import com.telhai.android_316294321.threads.MediaHandler;
 import com.telhai.android_316294321.threads.MediaRunnable;
 
@@ -92,30 +95,20 @@ public class SoundControlView extends CardView {
         imageButtonPause = findViewById(R.id.imageButtonPause);
         seekVolume = findViewById(R.id.seekVolume);
         // View - Pause ImageButton
-        imageButtonPause.setOnClickListener(view -> {
-            Log.i(TAG, String.format("togglePause.onCheckedChanged(%s, %s)", soundName, isPaused));
-            setIsPaused(!isPaused);
-        });
+        imageButtonPause.setOnClickListener(new PauseOnClickListener(this));
         // View - Volume SeekBar
         seekVolume.setProgress(volume); // NOTE: Doing this before adding listener prevents call.
-        seekVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                Log.i(TAG, String.format("seekVolume.onProgressChanged(%s, %d, %s)",
-                        soundName, progress, fromUser));
-                if (fromUser) setVolume(progress);
-            }
+        seekVolume.setOnSeekBarChangeListener(new VolumeChangeListener(this));
+    }
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                Log.v(TAG, String.format("seekVolume.onStartTrackingTouch(%s)", soundName));
-            }
+    public void togglePaused() {
+        setIsPaused(!isPaused);
+    }
+    //#endregion
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                Log.v(TAG, String.format("seekVolume.onStopTrackingTouch(%s)", soundName));
-            }
-        });
+    //#region Getters
+    public String getSoundName() {
+        return soundName;
     }
     //#endregion
 
@@ -171,7 +164,7 @@ public class SoundControlView extends CardView {
         requestLayout();
     }
 
-    public void setIsPaused(boolean value) {
+    private void setIsPaused(boolean value) {
         isPaused = value;
         if (runnable.getHandler() != null) {
             MediaHandler handler = runnable.getHandler();

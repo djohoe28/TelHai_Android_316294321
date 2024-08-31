@@ -6,9 +6,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -27,6 +29,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.telhai.android_316294321.handlers.FabOnClickListener;
+import com.telhai.android_316294321.handlers.MyValueEventListener;
+import com.telhai.android_316294321.handlers.UriActivityResultCallback;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,11 +42,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private static final String FIREBASE_URL =
             "https://telhai-android-316294321-default-rtdb.europe-west1.firebasedatabase.app";
-    private static final Pattern FILENAME_PATTERN = Pattern.compile(".*/(?<name>.*)");
-    private static final int REQUEST_CODE_PERMISSION = 1;
     private FirebaseAuth mAuth;
     private LinearLayout linearLayoutSounds;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,46 +58,9 @@ public class MainActivity extends AppCompatActivity {
         linearLayoutSounds = findViewById(R.id.linearLayoutSounds);
         ActivityResultLauncher<String> mGetContent = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
-                uri -> {
-                    Log.i(TAG, String.format("onActivityResult(%s)", uri));
-                    if (uri != null) {
-                        // Extract filename from URI
-                        String segment = uri.getLastPathSegment() == null ? uri.toString() : uri.getLastPathSegment();
-                        Matcher matcher = FILENAME_PATTERN.matcher(segment);
-                        String name = matcher.find() ? matcher.group("name") : segment;
-                        // Create view
-                        SoundControlView _view = new SoundControlView(
-                                MainActivity.this,
-                                uri,
-                                name,
-                                R.drawable.baseline_audio_file_24);
-                        linearLayoutSounds.addView(_view);
-                    }
-                });
+                new UriActivityResultCallback(this));
         FloatingActionButton fabImport = findViewById(R.id.fabImport);
-        fabImport.setOnClickListener(view -> {
-            // Check Permission
-            if (ContextCompat.checkSelfPermission(view.getContext(),
-                    Manifest.permission.READ_MEDIA_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                // Permission not granted; Request permission.
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    // Tiramisu or newer (Android 33+)
-                    ActivityCompat.requestPermissions(
-                            MainActivity.this,
-                            new String[]{Manifest.permission.READ_MEDIA_AUDIO},
-                            REQUEST_CODE_PERMISSION);
-                } else {
-                    // Older than Tiramisu (Android 32-)
-                    ActivityCompat.requestPermissions(
-                            MainActivity.this,
-                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                            REQUEST_CODE_PERMISSION);
-                }
-            } else {
-                // Permission granted; Request audio file.
-                mGetContent.launch("audio/*");
-            }
-        });
+        fabImport.setOnClickListener(new FabOnClickListener(MainActivity.this, mGetContent));
         // Firebase
         mAuth = FirebaseAuth.getInstance();
 
@@ -116,21 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         myRef.setValue("Hello, World!");
         // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                Log.i(TAG, "Value is: " + value);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Failed to read value
-                Log.e(TAG, "Failed to read value.", error.toException());
-            }
-        });
+        myRef.addValueEventListener(new MyValueEventListener());
     }
 
 
@@ -187,5 +138,9 @@ public class MainActivity extends AppCompatActivity {
             // FirebaseUser.getIdToken() instead.
             String uid = user.getUid();
         }
+    }
+
+    public void addSoundView(SoundControlView view) {
+        linearLayoutSounds.addView(view);
     }
 }
