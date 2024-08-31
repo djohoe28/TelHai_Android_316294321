@@ -21,31 +21,31 @@ public class MediaRunnable implements Runnable {
     private final int resId; // NOTE: Null mutex with `uri`
     private final @Nullable Uri uri; // NOTE: Null mutex with `resId`
     private final int volume;
-    private final boolean isMuted;
+    private final boolean isPaused;
 
     private MediaPlayer player;
     private MediaHandler handler;
     //#endregion
 
     //#region Constructors
-    public MediaRunnable(Context _context, int _resId, int _volume, boolean _isMuted) {
-        Log.v(TAG, String.format("Constructor(resId=%d, volume=%d, isMuted=%s)",
-                _resId, _volume, _isMuted));
+    public MediaRunnable(Context _context, int _resId, int _volume, boolean _isPaused) {
+        Log.v(TAG, String.format("IntConstructor(resId=%d, volume=%d, isPaused=%s)",
+                _resId, _volume, _isPaused));
         context = _context;
         resId = _resId;
         uri = null;
         volume = _volume;
-        isMuted = _isMuted;
+        isPaused = _isPaused;
     }
 
-    public MediaRunnable(Context _context, @NonNull Uri _uri, int _volume, boolean _isMuted) {
-        Log.v(TAG, String.format("Constructor(uri=%s, volume=%d, isMuted=%s)",
-                _uri, _volume, _isMuted));
+    public MediaRunnable(Context _context, @NonNull Uri _uri, int _volume, boolean _isPaused) {
+        Log.v(TAG, String.format("URIConstructor(uri=%s, volume=%d, isPaused=%s)",
+                _uri, _volume, _isPaused));
         context = _context;
         resId = -1;
         uri = _uri;
         volume = _volume;
-        isMuted = _isMuted;
+        isPaused = _isPaused;
     }
     //#endregion
 
@@ -64,7 +64,7 @@ public class MediaRunnable implements Runnable {
             player = MediaPlayer.create(context, resId);
         player.setLooping(true);
         setVolume(volume);
-        setIsMuted(isMuted);
+        setIsPaused(isPaused);
         // TODO: Add CountDownLatch for synchronization.
         // TODO: Release `MediaPlayer` resources in `finally` block
         Looper.prepare();
@@ -86,7 +86,7 @@ public class MediaRunnable implements Runnable {
         player.setVolume(volumeFloat, volumeFloat);
     }
 
-    public void setIsMuted(boolean value) {
+    public void setIsPaused(boolean value) {
         if (player == null) return;
         // NOTE: Technically pausing rather than muting, but I think it's cute.
         if (value) player.pause();

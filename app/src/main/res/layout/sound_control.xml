@@ -29,7 +29,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@android:color/transparent"
-            android:contentDescription="@string/mute_text"
+            android:contentDescription="@string/pause_text"
             app:srcCompat="@drawable/baseline_pause_circle_filled_24" />
 
         <SeekBar

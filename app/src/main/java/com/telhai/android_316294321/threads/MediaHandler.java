@@ -13,7 +13,7 @@ public class MediaHandler extends Handler {
     private static final String TAG = "MediaHandler";
     public static final int TERMINATE_MESSAGE = -1;
     public static final int VOLUME_CHANGE_MESSAGE = 2;
-    public static final int MUTED_CHANGE_MESSAGE = 3;
+    public static final int PAUSED_CHANGE_MESSAGE = 3;
     // Instance
     private final MediaRunnable runnable;
     //#endregion
@@ -37,8 +37,8 @@ public class MediaHandler extends Handler {
             case VOLUME_CHANGE_MESSAGE:
                 runnable.setVolume((int) message.obj);
                 break;
-            case MUTED_CHANGE_MESSAGE:
-                runnable.setIsMuted((boolean) message.obj);
+            case PAUSED_CHANGE_MESSAGE:
+                runnable.setIsPaused((boolean) message.obj);
                 break;
             default:
                 break;

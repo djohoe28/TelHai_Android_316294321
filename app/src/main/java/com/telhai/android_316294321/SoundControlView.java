@@ -30,10 +30,8 @@ public class SoundControlView extends CardView {
     private MediaRunnable runnable;
 
     // Views
-    private TextView textName;
-    // TODO: Duplicate speakable text present
-    // TODO: Refactor "mute" to "pause"
-    private ImageButton imageButtonMute;
+    private TextView textName; // TODO: Duplicate speakable text present
+    private ImageButton imageButtonPause;
     private SeekBar seekVolume;
 
     // Attributes
@@ -49,9 +47,9 @@ public class SoundControlView extends CardView {
      */
     private int volume = 0;
     /**
-     * Whether the sound is currently "muted" (paused).
+     * Whether the sound is currently paused.
      */
-    private boolean isMuted = false;
+    private boolean isPaused = false;
     //#endregion
 
 
@@ -91,12 +89,12 @@ public class SoundControlView extends CardView {
         inflater.inflate(R.layout.sound_control, this, true);
         // Get views
         textName = findViewById(R.id.textName);
-        imageButtonMute = findViewById(R.id.imageButtonPause);
+        imageButtonPause = findViewById(R.id.imageButtonPause);
         seekVolume = findViewById(R.id.seekVolume);
-        // View - Mute ImageButton
-        imageButtonMute.setOnClickListener(view -> {
-            Log.i(TAG, String.format("toggleMute.onCheckedChanged(%s, %s)", soundName, isMuted));
-            setIsMuted(!isMuted);
+        // View - Pause ImageButton
+        imageButtonPause.setOnClickListener(view -> {
+            Log.i(TAG, String.format("togglePause.onCheckedChanged(%s, %s)", soundName, isPaused));
+            setIsPaused(!isPaused);
         });
         // View - Volume SeekBar
         seekVolume.setProgress(volume); // NOTE: Doing this before adding listener prevents call.
@@ -143,7 +141,7 @@ public class SoundControlView extends CardView {
         if (runnable != null && runnable.getHandler() != null) {
             runnable.getHandler().sendEmptyMessage(MediaHandler.TERMINATE_MESSAGE);
         }
-        runnable = new MediaRunnable(getContext(), resId, volume, isMuted);
+        runnable = new MediaRunnable(getContext(), resId, volume, isPaused);
         new Thread(runnable).start();
     }
 
@@ -157,7 +155,7 @@ public class SoundControlView extends CardView {
         if (runnable != null && runnable.getHandler() != null) {
             runnable.getHandler().sendEmptyMessage(MediaHandler.TERMINATE_MESSAGE);
         }
-        runnable = new MediaRunnable(getContext(), uri, volume, isMuted);
+        runnable = new MediaRunnable(getContext(), uri, volume, isPaused);
         new Thread(runnable).start();
     }
 
@@ -173,14 +171,14 @@ public class SoundControlView extends CardView {
         requestLayout();
     }
 
-    public void setIsMuted(boolean value) {
-        isMuted = value;
+    public void setIsPaused(boolean value) {
+        isPaused = value;
         if (runnable.getHandler() != null) {
             MediaHandler handler = runnable.getHandler();
-            Message message = handler.obtainMessage(MediaHandler.MUTED_CHANGE_MESSAGE, value);
+            Message message = handler.obtainMessage(MediaHandler.PAUSED_CHANGE_MESSAGE, value);
             handler.sendMessage(message);
         }
-        imageButtonMute.setImageResource(isMuted
+        imageButtonPause.setImageResource(isPaused
                 ? R.drawable.baseline_play_circle_filled_24
                 : R.drawable.baseline_pause_circle_filled_24);
         invalidate();
