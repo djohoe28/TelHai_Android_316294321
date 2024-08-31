@@ -10,7 +10,7 @@ public class PauseOnClickListener implements View.OnClickListener {
     // Static
     private static final String TAG = "PauseOnClickListener";
     // Instance
-    private SoundControlView view;
+    private final SoundControlView view;
     //#endregion
 
     //#region Constructors
