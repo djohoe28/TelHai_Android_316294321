@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SoundActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.172" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabImport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="28dp"
+        android:clickable="true"
+        android:contentDescription="@string/import_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/baseline_upload_file_24" />
+
+    <Button
+        android:id="@+id/buttonGoToSounds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.85" />
+
+    <ScrollView
+        android:id="@+id/scrollViewSounds"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonGoToSounds"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+
+        <LinearLayout
+            android:id="@+id/linearLayoutSounds"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.telhai.android_316294321.SoundControlView
+                android:id="@+id/soundWater"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:soundIcon="@drawable/baseline_water_drop_24"
+                app:soundName="@string/water_name"
+                app:soundPath="@raw/sound_water" />
+
+            <com.telhai.android_316294321.SoundControlView
+                android:id="@+id/soundEarth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:soundIcon="@drawable/baseline_directions_walk_24"
+                app:soundName="@string/earth_name"
+                app:soundPath="@raw/sound_earth" />
+
+            <com.telhai.android_316294321.SoundControlView
+                android:id="@+id/soundFire"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:soundIcon="@drawable/baseline_local_fire_department_24"
+                app:soundName="@string/fire_name"
+                app:soundPath="@raw/sound_fire" />
+
+            <com.telhai.android_316294321.SoundControlView
+                android:id="@+id/soundAir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:soundIcon="@drawable/baseline_wind_power_24"
+                app:soundName="@string/air_name"
+                app:soundPath="@raw/sound_air" />
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

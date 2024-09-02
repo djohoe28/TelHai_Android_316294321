@@ -10,7 +10,7 @@ public class VolumeChangeListener implements SeekBar.OnSeekBarChangeListener {
     // Static
     private static final String TAG = "VolumeChangeListener";
     // Instance
-    private final SoundControlView view;
+    public final SoundControlView view;
     //#endregion
 
     //#region Constructors

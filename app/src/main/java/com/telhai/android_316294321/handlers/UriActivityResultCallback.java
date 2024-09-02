@@ -5,8 +5,8 @@ import android.util.Log;
 
 import androidx.activity.result.ActivityResultCallback;
 
-import com.telhai.android_316294321.MainActivity;
 import com.telhai.android_316294321.R;
+import com.telhai.android_316294321.SoundActivity;
 import com.telhai.android_316294321.SoundControlView;
 
 import java.util.regex.Matcher;
@@ -18,10 +18,10 @@ public class UriActivityResultCallback implements ActivityResultCallback<Uri> {
     private static final String TAG = "UriActivityResultCallback";
     private static final Pattern FILENAME_PATTERN = Pattern.compile(".*/(?<name>.*)");
     // Instance
-    private final MainActivity mActivity;
+    private final SoundActivity mActivity;
     //#endregion
 
-    public UriActivityResultCallback(MainActivity _mActivity) {
+    public UriActivityResultCallback(SoundActivity _mActivity) {
         mActivity = _mActivity;
     }
 

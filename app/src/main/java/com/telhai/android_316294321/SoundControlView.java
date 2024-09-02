@@ -14,12 +14,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 
-import java.util.Locale;
-
 import com.telhai.android_316294321.handlers.PauseOnClickListener;
 import com.telhai.android_316294321.handlers.VolumeChangeListener;
 import com.telhai.android_316294321.threads.MediaHandler;
 import com.telhai.android_316294321.threads.MediaRunnable;
+
+import java.util.Locale;
 
 public class SoundControlView extends CardView {
     //#region Properties
@@ -175,6 +175,10 @@ public class SoundControlView extends CardView {
                 : R.drawable.baseline_pause_circle_filled_24);
         invalidate();
         requestLayout();
+    }
+
+    public void setOnVolumeChangeListener(VolumeChangeListener listener) {
+        seekVolume.setOnSeekBarChangeListener(listener);
     }
     //#endregion
 }

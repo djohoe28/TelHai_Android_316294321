@@ -8,4 +8,10 @@
     <string name="air_name">Air</string>
     <string name="earth_name">Earth</string>
     <string name="import_text">Import</string>
+    <string name="email_text">E-Mail Address</string>
+    <string name="password_text">Password</string>
+    <string name="register_text">Register</string>
+    <string name="login_text">Login</string>
+    <string name="sounds_text">Sounds</string>
+    <string name="anon_text">Not logged in.</string>
 </resources>

@@ -7,14 +7,20 @@ import androidx.annotation.NonNull;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.telhai.android_316294321.SoundActivity;
+import com.telhai.android_316294321.models.UserPreferences;
 
-public class MyValueEventListener implements ValueEventListener {
+public class PreferencesValueEventListener implements ValueEventListener {
     //#region Properties
-    private static final String TAG = "MyValueEventListener";
+    // Static
+    private static final String TAG = "UserValueEventListener";
+    // Instance
+    private final SoundActivity context;
     //#endregion
 
     //#region Constructors
-    public MyValueEventListener() {
+    public PreferencesValueEventListener(SoundActivity _context) {
+        context = _context;
     }
     //#endregion
 
@@ -23,7 +29,8 @@ public class MyValueEventListener implements ValueEventListener {
     public void onDataChange(@NonNull DataSnapshot snapshot) {
         // This method is called once with the initial value and again
         // whenever data at this location is updated.
-        String value = snapshot.getValue(String.class);
+        UserPreferences value = snapshot.getValue(UserPreferences.class);
+        context.updatePreferences(value);
         Log.i(TAG, "Value is: " + value);
     }
 
